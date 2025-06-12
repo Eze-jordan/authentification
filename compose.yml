@@ -1,34 +1,34 @@
 services:
   db:
     image: postgres:15
-    container_name: postgres_user&avis_db
+    container_name: postgres_useravis_db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456789
-      POSTGRES_DB: user&avis_db
+      POSTGRES_DB: useravis_db
     ports:
       - "5440:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
-      - user&avis-net
+      - useravis-net
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: user&avis_app
+    container_name: useravis_app
     depends_on:
       - db
     ports:
       - "9091:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/user&avis_db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/useravis_db
     networks:
-      - user&avis-net
+      - useravis-net
 
 volumes:
   db-data:
 
 networks:
-  referentiel-net:
+  useravis-net:
