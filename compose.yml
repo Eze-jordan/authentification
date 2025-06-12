@@ -1,34 +1,34 @@
 services:
   db:
     image: postgres:15
-    container_name: postgres_useravis_db
+    container_name: postgres_authentification_db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456789
-      POSTGRES_DB: useravis_db
+      POSTGRES_DB: authentification_db
     ports:
       - "5440:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
-      - useravis-net
+      - authentification-net
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: useravis_app
+    container_name: authentification_app
     depends_on:
       - db
     ports:
-      - "9091:8080"
+      - "9086:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/useravis_db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/authentification_db
     networks:
-      - useravis-net
+      - authentification-net
 
 volumes:
   db-data:
 
 networks:
-  useravis-net:
+  authentification-net:
