@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.internal.Function;
 import org.springframework.stereotype.Service;
 
-import java.io.Serializable;
 import java.security.Key;
 import java.util.Date;
 import java.util.Map;
@@ -59,11 +58,12 @@ public class JwtService {
     private Map<String, String> generateJwt(Utilisateur utilisateur) {
         // Définit l'heure actuelle et l'expiration du JWT
         final long currentTime = System.currentTimeMillis();
-        final long expirationTime = currentTime + 1 + 60 * 60 * 1000;  // 5 Heures
+        final long expirationTime = currentTime + 1 * 60 * 60 * 1000;  // 5 Heures
 
         // Crée les informations de l'utilisateur à inclure dans le JWT
      final  Map<String, Object> claims = Map.of(
-                "nom", utilisateur.getNom(),
+                 "id", utilisateur.getId(),               // <--- ajoute cette ligne
+                    "nom", utilisateur.getNom(),
                 "email", utilisateur.getEmail(),
                 "role", utilisateur.getRole(),
                 Claims.EXPIRATION, new Date(expirationTime),
@@ -78,11 +78,11 @@ public class JwtService {
                 .setExpiration(new Date(expirationTime))
                 .setSubject(utilisateur.getEmail())
                 .setClaims(claims)
-                .signWith(getKey(), SignatureAlgorithm.HS384)
+                .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
 
         // Retourne le JWT dans un format de map avec la clé "bearer"
-        return Map.of("bearer", bearer);
+        return Map.of("token", bearer);
     }
 
     // Cette méthode retourne la clé de signature pour le JWT
